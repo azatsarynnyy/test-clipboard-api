@@ -28,15 +28,29 @@ function activate(context) {
         }
         const selection = editor.selection;
         const text = editor.document.getText(selection);
-        vscode.env.clipboard.writeText(text);
+        try {
+            if (text) {
+                vscode.env.clipboard.writeText(text);
+            }
+        }
+        catch (e) {
+            vscode.window.showErrorMessage(e);
+        }
     });
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
     let disposable2 = vscode.commands.registerCommand('extension.read', () => __awaiter(this, void 0, void 0, function* () {
         // The code you place here will be executed every time your command is executed
-        const text = yield vscode.env.clipboard.readText();
-        vscode.window.showInformationMessage(text);
+        try {
+            const text = yield vscode.env.clipboard.readText();
+            if (text.length > 0) {
+                vscode.window.showInformationMessage(text);
+            }
+        }
+        catch (e) {
+            vscode.window.showErrorMessage(e);
+        }
     }));
     context.subscriptions.push(disposable1);
     context.subscriptions.push(disposable2);
